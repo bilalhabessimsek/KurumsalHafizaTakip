@@ -97,13 +97,4 @@ Sistem 3 temel rol hiyerarşisine göre çalışır[cite: 7]:
 | *Departman bazlı hızlı personel ekleme, görev atama ve silme aksiyonları.* | *İptal edilen veya tamamlanan proje ve görevlerin kayıt altına alındığı arşiv.* |
 
 
----
 
-## 🚀 Kurulum ve Çalıştırma
-
-Projeyi yerel geliştirme ortamınızda çalıştırmak için:
-
-1. Depoyu klonlayın:
-   ```bash
-   git clone [https://github.com/KullaniciAdin/Kurumsal-Hafiza-Takip-Sistemi.git](https://github.com/KullaniciAdin/Kurumsal-Hafiza-Takip-Sistemi.git)
-   cd Kurumsal-Hafiza-Takip-Sistemi
