@@ -66,7 +66,7 @@ Sistem 3 temel rol hiyerarşisine göre çalışır[cite: 7]:
 
 | Sistem Yöneticisi (Admin) Paneli | Saha Personeli Paneli |
 | :---: | :---: |
-| <img src="docs/screenshots/admin-paneli.png" width="100%" alt="Admin Paneli"/> | <img src="docs/screenshots/personel-paneli.png" width="100%" alt="Personel Paneli"/> |
+| <img src="KurumsalHafizaTakip/docs/screenshots/admin-paneli.jpg" width="100%" alt="Admin Paneli"/> | <img src="KurumsalHafizaTakip/docs/screenshots/personel-paneli.jpg" width="100%" alt="Personel Paneli"/> |
 | *Tüm departman, proje, tutanak ve personel verilerini kapsayan tam yetkili panel.* | *Yalnızca ilgili personele atanan işleri barındıran kısıtlı görünüm.* |
 
 ---
@@ -75,7 +75,7 @@ Sistem 3 temel rol hiyerarşisine göre çalışır[cite: 7]:
 
 | Gerçek Zamanlı Sohbet & Toast Bildirimleri | Ağırlık Puanlı Görev Atama |
 | :---: | :---: |
-| <img src="docs/screenshots/canli-sohbet-signalr.png" width="100%" alt="Canlı Sohbet"/> | <img src="docs/screenshots/gorev-atama.png" width="100%" alt="Görev Atama"/> |
+| <img src="KurumsalHafizaTakip/docs/screenshots/canli-sohbet-signalr.jpg" width="100%" alt="Canlı Sohbet"/> | <img src="KurumsalHafizaTakip/docs/screenshots/gorev-atama.png" width="100%" alt="Görev Atama"/> |
 | *WebSocket tabanlı uçtan uca anlık mesajlaşma ve sistem içi olay bildirimleri.* | *Zorluk derecesine (100, 250, 500) göre personele iş atama penceresi.* |
 
 ---
@@ -84,7 +84,7 @@ Sistem 3 temel rol hiyerarşisine göre çalışır[cite: 7]:
 
 | Aktif Görev Takibi & Ekip Yönetimi | Onay Süreci & Karar Geçmişi |
 | :---: | :---: |
-| <img src="docs/screenshots/gorev-detay.png" width="100%" alt="Görev Detay"/> | <img src="docs/screenshots/onay-mekanizmasi.png" width="100%" alt="Onay Süreci"/> |
+| <img src="KurumsalHafizaTakip/docs/screenshots/gorev-detay.png" width="100%" alt="Görev Detay"/> | <img src="KurumsalHafizaTakip/docs/screenshots/onay-mekanizmasi.png" width="100%" alt="Onay Süreci"/> |
 | *Görev geçmişine dair revize notları ve projeye bağlı dinamik ekip üyeleri.* | *İki kademeli (Personel onaya sunar -> Yönetici onaylar/reddeder) onay mekanizması.* |
 
 ---
@@ -93,8 +93,9 @@ Sistem 3 temel rol hiyerarşisine göre çalışır[cite: 7]:
 
 | Departman İşlem Merkezi | Kurumsal Hafıza Arşivi |
 | :---: | :---: |
-| <img src="docs/screenshots/departman-yonetimi.png" width="100%" alt="Departman Yönetimi"/> | <img src="docs/screenshots/kurumsal-arsiv.png" width="100%" alt="Arşiv"/> |
+| <img src="KurumsalHafizaTakip/docs/screenshots/departman-yonetimi.png" width="100%" alt="Departman Yönetimi"/> | <img src="KurumsalHafizaTakip/docs/screenshots/kurumsal-arsiv.jpg" width="100%" alt="Arşiv"/> |
 | *Departman bazlı hızlı personel ekleme, görev atama ve silme aksiyonları.* | *İptal edilen veya tamamlanan proje ve görevlerin kayıt altına alındığı arşiv.* |
+
 
 ---
 
