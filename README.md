@@ -66,7 +66,7 @@ Sistem 3 temel rol hiyerarşisine göre çalışır[cite: 9]:
 
 | Sistem Yöneticisi (Admin) Paneli | Saha Personeli Paneli |
 | :---: | :---: |
-| <img src="docs/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-09-11%20191745.jpg" width="100%" alt="Admin Paneli"/> | <img src="docs/Ekran%20g%C3%B6r%C3%BCnt%C3%BCs%C3%BC%202026-09-11%20190452%20(1).jpg" width="100%" alt="Personel Paneli"/> |
+| <img src="docs/screenshots/Admin.jpg" width="100%" alt="Admin Paneli"/> | <img src="docs/screenshots/Personel.jpg" width="100%" alt="Personel Paneli"/> |
 | *Tüm departman, proje, tutanak ve personel verilerini kapsayan tam yetkili panel.*[cite: 9] | *Yalnızca ilgili personele atanan işleri barındıran kısıtlı görünüm.*[cite: 9] |
 
 ---
