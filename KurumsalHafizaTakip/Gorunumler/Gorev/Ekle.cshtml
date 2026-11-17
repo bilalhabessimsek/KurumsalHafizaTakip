@@ -1,0 +1,44 @@
+﻿@model KurumsalHafizaTakip.VeriTabaniTabs.Gorev
+@{
+    // Hata buradaydı: Yolun doğruluğunu mühürledik.
+    // Klasör: MainSablon, Dosya: _AnaSablon.cshtml
+    Layout = "~/Gorunumler/MainSablon/_AnaSablon.cshtml";
+    ViewData["Title"] = "Yeni Görev Tanımla";
+}
+
+<div class="container mt-4">
+    <div class="card bg-dark border-info shadow-lg col-md-8 mx-auto">
+        <div class="card-header bg-info text-dark fw-bold">🚀 Kurumsal Görev Tanımlama</div>
+        <div class="card-body">
+            <form asp-action="Ekle" method="post">
+                <div class="mb-3">
+                    <label class="form-label text-white-50 small">Görevin Tanımı / Başlığı</label>
+                    <input asp-for="Baslik" class="form-control bg-dark text-white border-secondary" required />
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-white-50 small">Sorumlu Personel</label>
+                        <select asp-for="PersonelId" class="form-select bg-dark text-white border-secondary"
+                                asp-items="@(new SelectList(ViewBag.Personeller, "Id", "AdSoyad"))" required></select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-white-50 small">Bağlı Olduğu Proje</label>
+                        <select asp-for="ProjeId" class="form-select bg-dark text-white border-secondary"
+                                asp-items="@(new SelectList(ViewBag.Projeler, "Id", "ProjeAdi"))" required></select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="text-white-50 small">İŞİN AĞIRLIK PUANI (Zorluk)</label>
+                    <input type="number" name="AgirlikPuani" class="form-control bg-dark text-white border-secondary" value="100" min="50" max="500" required />
+                    <div class="form-text text-muted">Önerilen: Basit: 100, Orta: 250, Zor: 500</div>
+                </div>
+
+                <div class="text-end mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Vazgeç</a>
+                    <button type="submit" class="btn btn-info px-4 fw-bold shadow">Görevi Aktifleştir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

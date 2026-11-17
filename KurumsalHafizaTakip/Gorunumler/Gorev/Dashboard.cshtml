@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Yönetim Paneli";
+    Layout = "~/Gorunumler/MainSablon/_AnaSablon.cshtml";
+}
+
+<div class="container-fluid pt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">
+        <h2 class="text-info fw-bold">📈 Kurumsal Özet Paneli</h2>
+        <span class="badge bg-dark border border-secondary text-white-50 px-3 py-2">Hafta 5: Dashboard</span>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card bg-dark border-info h-100 shadow">
+                <div class="card-body text-center p-4">
+                    <p class="text-white-50 small mb-1">AKTİF İŞ YÜKÜ</p>
+                    <h1 class="text-info display-5 fw-bold mb-0">@ViewBag.AktifGorevler</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card bg-dark border-warning h-100 shadow">
+                <div class="card-body text-center p-4">
+                    <p class="text-white-50 small mb-1">ONAY BEKLEYEN</p>
+                    <h1 class="text-warning display-5 fw-bold mb-0">@ViewBag.OnayBekleyen</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card bg-dark border-success h-100 shadow">
+                <div class="card-body text-center p-4">
+                    <p class="text-white-50 small mb-1">TAMAMLANAN</p>
+                    <h1 class="text-success display-5 fw-bold mb-0">@ViewBag.Tamamlanan</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card bg-dark border-secondary h-100 shadow">
+                <div class="card-body text-center p-4">
+                    <p class="text-white-50 small mb-1">TOPLAM KAYIT</p>
+                    <h1 class="text-white display-5 fw-bold mb-0">@ViewBag.ToplamGorev</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 text-center">
+        <a asp-action="Index" class="btn btn-info btn-lg px-5 shadow fw-bold">Detaylı Takip Tablosuna Git →</a>
+    </div>
+</div>

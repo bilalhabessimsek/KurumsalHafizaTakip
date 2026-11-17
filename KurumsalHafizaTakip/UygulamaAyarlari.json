@@ -1,4 +1,7 @@
 {
+  "ConnectionStrings": {
+    "VarsayilanBaglanti": "Server=(localdb)\\mssqllocaldb;Database=KHATS_DB;Trusted_Connection=True;MultipleActiveResultSets=true"
+  },
   "Logging": {
     "LogLevel": {
       "Default": "Information",

@@ -1,0 +1,143 @@
+﻿@model KurumsalHafizaTakip.VeriTabaniTabs.Gorev
+@{
+    ViewData["Title"] = "Görev Detayı";
+    Layout = "~/Gorunumler/MainSablon/_AnaSablon.cshtml";
+}
+
+<div class="card bg-dark border-info mb-4 shadow-lg p-3">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2 class="text-info mb-1">@Model.Baslik</h2>
+            <p class="text-white-50 mb-0">
+                Sorumlu: <b class="text-white">@Model.Personel?.AdSoyad</b> |
+                Proje: <span class="badge bg-secondary">@(Model.Proje?.ProjeAdi ?? "Bağımsız Görev")</span>
+            </p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Listeye Dön</a>
+        </div>
+    </div>
+</div>
+
+<div class="card bg-dark border-warning mb-4 shadow-lg">
+    <div class="card-header bg-warning text-dark fw-bold">⚖️ Hiyerarşik Onay Merkezi</div>
+    <div class="card-body row align-items-center">
+        <div class="col-md-6 border-end border-secondary">
+            <small class="text-white-50 d-block">Mevcut Durum:</small>
+            <h3 class="@(Model.Durum == "Onay Bekliyor" ? "text-warning" : "text-info")">@Model.Durum</h3>
+        </div>
+        <div class="col-md-6 text-end">
+            @if (User.IsInRole("Personel") && Model.Durum != "Onay Bekliyor" && Model.Durum != "Onaylandı")
+            {
+                <form asp-action="DurumGuncelle" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <input type="hidden" name="yeniDurum" value="Onay Bekliyor" />
+                    <button type="submit" class="btn btn-warning w-100 fw-bold">İşi Bitir, Onaya Gönder 🚀</button>
+                </form>
+            }
+            @if (User.IsInRole("Admin") || User.IsInRole("Görev Sorumlusu"))
+            {
+                <div class="btn-group w-100 shadow">
+                    <form asp-action="DurumGuncelle" method="post" class="w-50">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <input type="hidden" name="yeniDurum" value="Onaylandı" />
+                        <button type="submit" class="btn btn-success w-100 fw-bold border-0">ONAYLA</button>
+                    </form>
+                    <form asp-action="DurumGuncelle" method="post" class="w-50 ms-1">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <input type="hidden" name="yeniDurum" value="Reddedildi" />
+                        <button type="submit" class="btn btn-danger w-100 fw-bold border-0">REDDET</button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-7 mb-4">
+        <div class="p-4 bg-dark border border-secondary rounded h-100 shadow">
+            <h4 class="text-warning border-bottom border-secondary pb-3 mb-3">📜 Kurumsal Hafıza</h4>
+            <div class="overflow-auto mb-4" style="max-height: 250px;">
+                @if (Model.Notlar != null && Model.Notlar.Any())
+                {
+                    @foreach (var not in Model.Notlar)
+                    {
+                        <div class="alert bg-secondary text-white border-0 mb-2 py-2 small shadow-sm">
+                            @not.Mesaj
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted small italic">Henüz hafıza kaydı yok.</p>
+                }
+            </div>
+            <form asp-action="NotEkle" method="post" class="input-group">
+                <input type="hidden" name="gorevId" value="@Model.Id" />
+                <input type="text" name="mesaj" class="form-control bg-dark text-white border-secondary" placeholder="Not ekle..." required />
+                <button type="submit" class="btn btn-warning">Ekle</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-5 mb-4">
+        <div class="p-4 bg-dark border border-info rounded h-100 shadow">
+            <h4 class="text-info border-bottom border-secondary pb-3 mb-3">👥 Proje Ekibi</h4>
+
+            @if (Model.Proje != null && Model.Proje.Ekip != null && Model.Proje.Ekip.Any())
+            {
+                <table class="table table-dark table-sm mb-3">
+                    <thead>
+                        <tr class="text-white-50 small">
+                            <th>İsim Soyisim</th>
+                            <th class="text-end">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var üye in Model.Proje.Ekip)
+                        {
+                            <tr>
+                                <td class="align-middle">@üye.Personel?.AdSoyad</td>
+                                <td class="text-end">
+                                    @if (User.IsInRole("Admin") || User.IsInRole("Görev Sorumlusu"))
+                                    {
+                                        <form asp-action="PersonelCikar" method="post" onsubmit="return confirm('Personel ekipten çıkarılsın mı?')">
+                                            <input type="hidden" name="gorevId" value="@Model.Id" />
+                                            <input type="hidden" name="ekipId" value="@üye.Id" />
+                                            <button type="submit" class="btn btn-link text-danger p-0 border-0 small">Çıkar</button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else if (Model.Proje == null)
+            {
+                <div class="alert alert-secondary py-2 small">Bu görev bağımsızdır, ekibi yoktur.</div>
+            }
+            else
+            {
+                <p class="text-muted small">Bu projenin henüz bir ekibi yok.</p>
+            }
+
+            @if (Model.Proje != null && (User.IsInRole("Admin") || User.IsInRole("Görev Sorumlusu")))
+            {
+                <div class="mt-4 pt-3 border-top border-secondary">
+                    <label class="small text-info mb-2">Ekipe Yeni Üye Ekle</label>
+                    <form asp-action="EkipEkle" method="post" class="input-group input-group-sm">
+                        <input type="hidden" name="gorevId" value="@Model.Id" />
+                        <input type="hidden" name="projeId" value="@Model.ProjeId" />
+                        <select name="personelId" class="form-select bg-dark text-white border-secondary"
+                                asp-items="@(new SelectList(ViewBag.TumPersoneller, "Id", "AdSoyad"))" required>
+                            <option value="">Personel Seç...</option>
+                        </select>
+                        <button type="submit" class="btn btn-info">Ekle</button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -2,23 +2,247 @@
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
-    <title>KHATS - Kurumsal Bellek</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KHATS - Kurumsal Hafıza Takip</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-    <style>body { background: #0b0e14; color: #d1d1d1; } .nav-link { color: #8b949e !important; }</style>
+    <style>
+        body {
+            background: #0b0e14;
+            color: #d1d1d1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background-color: #161b22 !important;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .nav-link {
+            color: #8b949e !important;
+            transition: 0.3s;
+        }
+
+            .nav-link:hover {
+                color: #58a6ff !important;
+            }
+
+        /* BİLDİRİM AÇILIR MENÜSÜ TASARIMI */
+        .bildirim-dropdown .dropdown-menu {
+            width: 320px;
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: #1c2128;
+            border: 1px solid #30363d;
+        }
+
+        .bildirim-item {
+            border-bottom: 1px solid #30363d;
+            padding: 10px 15px;
+            color: #d1d1d1;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+            .bildirim-item:hover {
+                background-color: #2d333b;
+                color: #fff;
+            }
+
+            .bildirim-item:last-child {
+                border-bottom: none;
+            }
+
+        .bildirim-tarih {
+            font-size: 0.75rem;
+            color: #8b949e;
+        }
+
+        /* SAĞ ÜST MAVİ BİLDİRİM KUTUSU EFEKTİ */
+        #bildirimKutusu {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: none;
+            min-width: 320px;
+            border-left: 5px solid #0dcaf0;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @@keyframes slideIn {
+            from {
+                transform: translateX(100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark mb-4">
+    <div id="bildirimKutusu" class="alert alert-info bg-dark text-white shadow-lg">
+        <div class="d-flex align-items-center">
+            <strong class="me-auto">📢 SİSTEM BİLDİRİMİ</strong>
+            <button type="button" class="btn-close btn-close-white" onclick="this.parentElement.parentElement.style.display='none'"></button>
+        </div>
+        <hr class="my-1 border-secondary">
+        <div id="bildirimMesaji" class="small p-2"></div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4 sticky-top shadow-lg">
         <div class="container">
-            <a class="navbar-brand text-info fw-bold" href="#">KHATS</a>
-            <div class="d-flex">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <span class="nav-link me-3">@User.Identity.Name</span>
-                    <a class="btn btn-outline-danger btn-sm" href="/Hesap/Cikis">Çıkış</a>
-                }
+            <a class="navbar-brand text-info fw-bold" href="/Gorev/Dashboard">KHATS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="/Gorev/Dashboard">📈 Dashboard</a></li>
+
+                    @if (User.IsInRole("Admin") || User.IsInRole("Görev Sorumlusu"))
+                    {
+                        <li class="nav-item"><a class="nav-link text-info" href="/Proje/Index">📁 Projeler</a></li>
+                        <li class="nav-item"><a class="nav-link text-success fw-bold" href="/Gorev/Ekle">➕ Görev Ata</a></li>
+                        <li class="nav-item"><a class="nav-link" style="color: #ffca28 !important; font-weight: bold;" href="/Rapor/Verimlilik">🏆 Performans</a></li>
+                        <li class="nav-item"><a class="nav-link text-light" href="/Toplanti/Index">📝 Tutanaklar</a></li>
+                        <li class="nav-item border-start border-secondary ms-2 ps-2">
+                            <a class="nav-link text-warning fw-bold" href="/Personel/Index">👥 Personel</a>
+                        </li>
+                    }
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-warning fw-bold" href="/Departman/Index">🏢 Departmanlar</a>
+                        </li>
+                    }
+
+                    <li class="nav-item"><a class="nav-link text-arsiv" href="/Gorev/Arsiv">📜 Arşiv</a></li>
+                    <li class="nav-item"><a class="nav-link text-success" href="/Sohbet/Index">💬 Mesajlar</a></li>
+                </ul>
+
+                <div class="d-flex align-items-center">
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <div class="dropdown bildirim-dropdown me-3">
+                            <a class="nav-link position-relative" href="#" role="button" id="bildirimMenuBtn" data-bs-toggle="dropdown" aria-expanded="false" onclick="bildirimleriGetir()">
+                                🔔
+                                <span id="bildirimSayaci" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;">
+                                    0
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bildirimMenuBtn">
+                                <div class="p-2 border-bottom border-secondary text-center fw-bold text-white">Bildirimleriniz</div>
+                                <div id="bildirimListesi">
+                                    <div class="text-center p-3 text-muted small">Yükleniyor...</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="text-white-50 small me-3">👤 @(User.Identity.Name)</span>
+                        <a href="/Hesap/Cikis" class="btn btn-outline-danger btn-sm">Çıkış</a>
+                    }
+                </div>
             </div>
         </div>
     </nav>
-    <div class="container">@RenderBody()</div>
+
+    <div class="container pb-5">
+        @RenderBody()
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+    <script>
+        // 1. SIGNALR BAĞLANTISI VE ANLIK BİLDİRİM YAKALAMA
+        var connection = new signalR.HubConnectionBuilder().withUrl("/bildirimHub").withAutomaticReconnect().build();
+
+        connection.on("BildirimAl", function (mesaj) {
+            // Mavi kutuyu göster
+            document.getElementById("bildirimMesaji").innerText = mesaj;
+            var kutu = document.getElementById("bildirimKutusu");
+            kutu.style.display = "block";
+            setTimeout(function() { kutu.style.display = "none"; }, 8000);
+
+            // Sağ üstteki kırmızı sayacı artır ve göster
+            var sayac = document.getElementById("bildirimSayaci");
+            var ankiSayi = parseInt(sayac.innerText) || 0;
+            sayac.innerText = ankiSayi + 1;
+            sayac.style.display = "inline-block";
+        });
+
+        connection.on("OturumuKapat", function () {
+            alert("Erişim yetkiniz iptal edildi. Sistemden çıkarılıyorsunuz!");
+            window.location.href = "/Hesap/Giris";
+        });
+
+        connection.start().then(function(){
+            // Sayfa açıldığında veritabanından mevcut bildirim sayısını çekmek istersen buraya ekleyebiliriz
+        }).catch(function (err) { console.error(err.toString()); });
+
+        // 2. ÇANA TIKLANDIĞINDA BİLDİRİMLERİ GETİRME (AJAX)
+        function bildirimleriGetir() {
+            var listeDiv = document.getElementById("bildirimListesi");
+            listeDiv.innerHTML = '<div class="text-center p-3 text-muted small">Yükleniyor...</div>';
+
+            fetch('/Bildirim/OkunmamislariGetir')
+                .then(response => response.json())
+                .then(data => {
+                    listeDiv.innerHTML = ''; // İçini temizle
+
+                    if(data.length === 0) {
+                        listeDiv.innerHTML = '<div class="text-center p-3 text-muted small">Yeni bildiriminiz yok.</div>';
+                        document.getElementById("bildirimSayaci").style.display = "none";
+                        document.getElementById("bildirimSayaci").innerText = "0";
+                        return;
+                    }
+
+                    // Kırmızı sayacı güncelle
+                    document.getElementById("bildirimSayaci").innerText = data.length;
+                    document.getElementById("bildirimSayaci").style.display = "inline-block";
+
+                    // Gelen verileri listeye ekle
+                    data.forEach(b => {
+                        var div = document.createElement("div");
+                        div.className = "bildirim-item";
+                        // Tıklayınca okundu yapma metodunu çağırır
+                        div.onclick = function() { bildirimiOku(b.id, b.ilgiliKayitId, b.tur); };
+
+                        div.innerHTML = `
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <strong class="text-info">${b.baslik}</strong>
+                                <span class="bildirim-tarih">${b.saat}</span>
+                            </div>
+                            <div class="small">${b.mesaj}</div>
+                        `;
+                        listeDiv.appendChild(div);
+                    });
+                })
+                .catch(error => {
+                    listeDiv.innerHTML = '<div class="text-center p-3 text-danger small">Bildirimler yüklenemedi.</div>';
+                });
+        }
+
+        // 3. BİLDİRİME TIKLAYINCA "OKUNDU" YAP VE İLGİLİ SAYFAYA GİT
+        function bildirimiOku(id, kayitId, tur) {
+            fetch('/Bildirim/OkunduIsaretle?id=' + id, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.basarili) {
+                        // Bildirimin türüne göre kullanıcıyı yönlendir (Burayı kendi projenin sayfalarına göre çoğaltabilirsin)
+                        if(tur === "Görev" && kayitId != null) {
+                            window.location.href = "/Gorev/Detay/" + kayitId;
+                        }
+                        else if(tur === "Toplantı" && kayitId != null) {
+                            window.location.href = "/Toplanti/Detay/" + kayitId;
+                        }
+                        else {
+                            // Sadece bilgi mesajıysa çanı yenile
+                            bildirimleriGetir();
+                        }
+                    }
+                });
+        }
+    </script>
 </body>
 </html>

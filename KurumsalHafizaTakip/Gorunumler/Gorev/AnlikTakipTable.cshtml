@@ -1,13 +1,74 @@
-﻿<!DOCTYPE html>
+﻿@model IEnumerable<KurumsalHafizaTakip.VeriTabaniTabs.Gorev>
+@{
+    ViewData["Title"] = "Görev Takibi"; Layout = "~/Gorunumler/MainSablon/_AnaSablon.cshtml";
+}
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-</head>
-<body>
-    <div>
-        @RenderBody()
+<div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">
+    <h2 class="text-info">🚀 Aktif Görevler</h2>
+    <div class="d-flex gap-2">
+        <a asp-action="Arsiv" class="btn btn-outline-secondary btn-sm">📁 Arşiv</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("Görev Sorumlusu"))
+        {
+            <a asp-action="Ekle" class="btn btn-success fw-bold">+ Yeni Görev</a>
+        }
     </div>
-</body>
-</html>
+</div>
+
+<div class="card bg-dark border-secondary shadow-lg">
+    <table class="table table-dark table-hover mb-0 align-middle">
+        <thead>
+            <tr class="text-white-50 small border-bottom border-secondary">
+                <th class="ps-4">GÖREV BİLGİSİ</th>
+                <th>SORUMLU</th>
+                <th>DURUM</th>
+                <th class="text-end pe-4">İŞLEMLER</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="ps-4">
+                        <div class="fw-bold text-white">@item.Baslik</div>
+                        <small class="text-info">Proje: @(item.Proje?.ProjeAdi ?? "Bağımsız")</small>
+                    </td>
+                    <td><span class="text-white-50">@item.Personel?.AdSoyad</span></td>
+                    <td>
+                        <span class="badge @(item.Durum == "Onay Bekliyor" ? "bg-warning text-dark animate-pulse" : "bg-primary")">@item.Durum</span>
+                    </td>
+                    <td class="text-end pe-4">
+                        <div class="btn-group">
+                            <a asp-action="Detay" asp-route-id="@item.Id" class="btn btn-sm btn-info">Detay</a>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Görev Sorumlusu"))
+                            {
+                                <form asp-action="IptalEt" asp-route-id="@item.Id" method="post" class="d-inline ms-1">
+                                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('İptal edilsin mi?')">İptal</button>
+                                </form>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .animate-pulse {
+        animation: pulse 1.5s infinite;
+    }
+    /* İŞTE ÇÖZÜM: @@ İŞARETİ */
+    @@keyframes pulse {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+</style>

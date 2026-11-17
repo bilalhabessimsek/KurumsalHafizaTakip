@@ -1,0 +1,41 @@
+﻿@model IEnumerable<KurumsalHafizaTakip.VeriTabaniTabs.ToplantiTutanagi>
+@{
+    Layout = "~/Gorunumler/MainSablon/_AnaSablon.cshtml";
+    ViewData["Title"] = "Toplantı Tutanakları";
+}
+
+<div class="container-fluid pt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-info pb-2">
+        <h2 class="text-info">📝 Kurumsal Toplantı Tutanakları</h2>
+        @if (User.IsInRole("Admin") || User.IsInRole("Görev Sorumlusu"))
+        {
+            <a href="/Toplanti/Ekle" class="btn btn-success fw-bold">➕ Yeni Tutanak Ekle</a>
+        }
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card bg-dark border-secondary h-100 shadow">
+                    <div class="card-header border-secondary d-flex justify-content-between">
+                        <strong class="text-white">@item.Konu</strong>
+                        <small class="text-white-50">@item.Tarih.ToString("dd MMM yyyy HH:mm")</small>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-info small mb-1"><strong>Katılımcılar:</strong> @item.Katilimcilar</p>
+                        <hr class="border-secondary my-2">
+                        <p class="text-light">@item.AlinanKararlar</p>
+                    </div>
+                    <div class="card-footer border-secondary d-flex justify-content-between align-items-center">
+                        <small class="text-white-50">Ekleyen: @item.Ekleyen?.AdSoyad</small>
+                        @if (!string.IsNullOrEmpty(item.DosyaYolu))
+                        {
+                            <a href="@item.DosyaYolu" target="_blank" class="btn btn-sm btn-outline-warning">📎 Belgeyi Gör</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

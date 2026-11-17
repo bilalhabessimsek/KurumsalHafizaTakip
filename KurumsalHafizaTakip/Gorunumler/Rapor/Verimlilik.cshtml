@@ -1,0 +1,93 @@
+﻿@model List<KurumsalHafizaTakip.Modeller.VerimlilikRaporuViewModel>
+@{
+    Layout = "~/Gorunumler/MainSablon/_AnaSablon.cshtml";
+}
+
+<div class="card bg-dark border-info mb-4 shadow-lg">
+    <div class="card-body">
+        <form method="get" class="row g-2">
+            <div class="col-md-4">
+                <select name="personelId" class="form-select bg-dark text-white border-secondary">
+                    <option value="">👤 Tüm Çalışanlar</option>
+                    @foreach (var p in ViewBag.Personeller)
+                    {
+                        <option value="@p.Id" selected="@(ViewBag.SeciliPersonel == p.Id)">@p.AdSoyad</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="donem" class="form-select bg-dark text-white border-secondary">
+                    <option value="hepsi" selected="@(ViewBag.SeciliDonem == "hepsi")">📅 Tüm Zamanlar</option>
+                    <option value="haftalik" selected="@(ViewBag.SeciliDonem == "haftalik")">📅 Bu Hafta</option>
+                    <option value="aylik" selected="@(ViewBag.SeciliDonem == "aylik")">📅 Bu Ay</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-info w-100 fw-bold">Süz 🔍</button>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <a href="/Rapor/VerimlilikCsvIndir?personelId=@ViewBag.SeciliPersonel&donem=@ViewBag.SeciliDonem" class="btn btn-success w-50 fw-bold" title="Excel İndir">📊 Excel</a>
+                <button onclick="window.print()" class="btn btn-secondary w-50 fw-bold" title="PDF Al">🖨️ PDF</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card bg-dark border-secondary shadow-lg">
+    <div class="card-header">
+        <h5 class="mb-0 text-warning">📊 Performans Çizelgesi (@ViewBag.SeciliDonem)</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr class="text-info">
+                    <th>Çalışan</th>
+                    <th>Toplam Puan</th>
+                    <th>Verimlilik</th>
+                    <th>Durum</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td class="fw-bold">@r.PersonelAdi</td>
+                        <td class="text-info">@r.ToplamPuan</td>
+                        <td style="width: 200px;">
+                            <div class="progress bg-secondary" style="height: 12px;">
+                                <div class="progress-bar @(r.FazlaMesaiYapti ? "bg-danger" : "bg-success")"
+                                     style="width: @(r.VerimlilikYuzdesi > 100 ? 100 : r.VerimlilikYuzdesi)%"></div>
+                            </div>
+                            <small>%@r.VerimlilikYuzdesi</small>
+                        </td>
+                        <td>
+                            <span class="badge @(r.FazlaMesaiYapti ? "bg-danger" : "bg-dark border border-secondary")">@r.PerformansDurumu</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    @@media print {
+        .navbar, form, .btn, #bildirimKutusu {
+            display: none !important;
+        }
+
+        body {
+            background: white !important;
+            color: black !important;
+        }
+
+        .card {
+            border: none !important;
+        }
+
+        .table {
+            color: black !important;
+            border: 1px solid #333 !important;
+        }
+    }
+</style>

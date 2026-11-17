@@ -1,0 +1,35 @@
+﻿@model KurumsalHafizaTakip.VeriTabaniTabs.Gorev
+@{
+    ViewData["Title"] = "Yeni Görev Oluştur";
+}
+
+<div class="card bg-dark border-info mx-auto shadow" style="max-width: 600px;">
+    <div class="card-header bg-info text-dark fw-bold text-center">YENİ GÖREV ATAMA</div>
+    <div class="card-body p-4">
+        <form asp-action="YeniGorev" method="post" enctype="multipart/form-data">
+            @* Dosya için şart! *@
+            <div class="mb-3">
+                <label class="form-label text-white-50">Görev Başlığı</label>
+                <input asp-for="Baslik" class="form-control bg-secondary text-white border-0" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label text-white-50">Personel</label>
+                <select asp-for="PersonelId" class="form-select bg-secondary text-white border-0"
+                        asp-items="@(new SelectList(ViewBag.Personeller, "Id", "AdSoyad"))" required>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label text-white-50">Proje</label>
+                <select asp-for="ProjeId" class="form-select bg-secondary text-white border-0"
+                        asp-items="@(new SelectList(ViewBag.Projeler, "Id", "ProjeAdi"))">
+                    <option value="">-- Projesiz --</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label text-warning fw-bold">Belge/Dosya Ekle</label>
+                <input type="file" name="dosya" class="form-control bg-dark text-info border-info" />
+            </div>
+            <button type="submit" class="btn btn-info w-100 fw-bold mt-3">Görevi Kaydet</button>
+        </form>
+    </div>
+</div>

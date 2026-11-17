@@ -1,0 +1,54 @@
+﻿@model KurumsalHafizaTakip.VeriTabaniTabs.Kullanici
+@{
+    Layout = "~/Gorunumler/MainSablon/_AnaSablon.cshtml";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card bg-dark text-white border-warning shadow-lg">
+            <div class="card-header bg-warning text-dark fw-bold text-center">
+                <h4 class="mb-0">👤 Yeni Personel Kayıt Formu</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-controller="Personel" asp-action="Ekle" method="post">
+
+                    <div class="mb-3">
+                        <label class="form-label text-warning small fw-bold">AD SOYAD</label>
+                        <input type="text" name="AdSoyad" class="form-control bg-dark text-white border-secondary" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-warning small fw-bold">E-POSTA ADRESİ</label>
+                        <!-- SQL'de hata veren Email kolonu için bu alan kritik! -->
+                        <input type="email" name="Email" class="form-control bg-dark text-white border-secondary" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-warning small fw-bold">KULLANICI ADI</label>
+                        <input type="text" name="KullaniciAdi" class="form-control bg-dark text-white border-secondary" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-warning small fw-bold">ŞİFRE</label>
+                        <input type="password" name="Sifre" class="form-control bg-dark text-white border-secondary" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-warning small fw-bold">SİSTEM ROLÜ</label>
+                        <select name="Rol" class="form-select bg-dark text-white border-secondary">
+                            <option value="Personel">Saha Personeli</option>
+                            <option value="Görev Sorumlusu">Vezir (Yönetici)</option>
+                            <option value="Personel Görevlisi">İK Sorumlusu</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-warning fw-bold">Personeli Sisteme Tanımla 🚀</button>
+                        <a href="/Personel/Index" class="btn btn-outline-secondary btn-sm">Listeye Dön</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

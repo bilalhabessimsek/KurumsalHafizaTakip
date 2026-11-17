@@ -1,0 +1,25 @@
+﻿@model KurumsalHafizaTakip.Modeller.Departman
+@{
+    // Temanın tam ve doğru yolunu Ekle sayfası için de veriyoruz
+    Layout = "~/Gorunumler/MainSablon/_AnaSablon.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>Yeni Departman Ekle</h2>
+    <hr />
+
+    <form action="/Departman/Ekle" method="post" class="w-50">
+        <div class="form-group mb-3">
+            <label class="fw-bold mb-1">Departman Adı:</label>
+            <input type="text" class="form-control" name="Ad" required placeholder="Örn: İnsan Kaynakları, Bilgi İşlem" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="fw-bold mb-1">Açıklama (İsteğe Bağlı):</label>
+            <textarea class="form-control" name="Aciklama" rows="3" placeholder="Departmanın görevleri hakkında kısa bilgi yazabilirsiniz..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">Departmanı Kaydet</button>
+        <a href="/Departman/Index" class="btn btn-secondary">İptal ve Listeye Dön</a>
+    </form>
+</div>

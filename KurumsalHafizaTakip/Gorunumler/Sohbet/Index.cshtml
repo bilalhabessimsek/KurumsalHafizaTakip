@@ -1,0 +1,295 @@
+﻿@{
+    Layout = "~/Gorunumler/MainSablon/_AnaSablon.cshtml";
+    ViewData["Title"] = "Kurumsal Canlı Sohbet";
+}
+
+<style>
+    /* WhatsApp Stili Arayüz */
+    .chat-container {
+        height: 600px;
+        background-color: #1a1d20;
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+    }
+
+    /* Sol Liste */
+    .user-list {
+        width: 300px;
+        border-right: 1px solid #343a40;
+        display: flex;
+        flex-direction: column;
+        background-color: #212529;
+    }
+
+    .user-list-header {
+        padding: 15px;
+        background-color: #198754;
+        color: white;
+        font-weight: bold;
+    }
+
+    .user-search {
+        padding: 10px;
+        border-bottom: 1px solid #343a40;
+    }
+
+        .user-search input {
+            background-color: #2b3035;
+            border: 1px solid #495057;
+            color: white;
+            border-radius: 20px;
+        }
+
+    #listContainer {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .user-item {
+        padding: 12px 15px;
+        border-bottom: 1px solid #2b3035;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+        .user-item:hover {
+            background-color: #2b3035;
+        }
+
+        .user-item.active {
+            background-color: #343a40;
+            border-left: 4px solid #198754;
+        }
+
+    /* Bildirim Balonu (Kırmızı Nokta) */
+    .unread-badge {
+        position: absolute;
+        right: 15px;
+        top: 18px;
+        background-color: #dc3545;
+        color: white;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-weight: bold;
+        display: none; /* Varsayılan gizli */
+    }
+
+    /* Sağ Sohbet Alanı */
+    .chat-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+        background-opacity: 0.05;
+    }
+
+    #sohbetKutusu {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mesaj-giden {
+        background-color: #198754;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 15px 15px 0 15px;
+        align-self: flex-end;
+        max-width: 70%;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .mesaj-gelen {
+        background-color: #343a40;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 15px 15px 15px 0;
+        align-self: flex-start;
+        max-width: 70%;
+        margin-bottom: 10px;
+        border: 1px solid #495057;
+    }
+
+    .chat-footer {
+        padding: 15px;
+        background-color: #212529;
+        border-top: 1px solid #343a40;
+    }
+
+    .saat {
+        font-size: 10px;
+        opacity: 0.7;
+        display: block;
+        text-align: right;
+        margin-top: 3px;
+    }
+
+    .mesaj-dosyasi {
+        max-width: 100%;
+        border-radius: 5px;
+        margin-top: 5px;
+    }
+</style>
+
+<div class="container-fluid mt-3">
+    <div class="chat-container shadow-lg border border-secondary">
+
+        <div class="user-list">
+            <div class="user-list-header text-center">👥 ÇALIŞANLAR</div>
+            <div class="user-search">
+                <input type="text" id="kisiAra" class="form-control form-control-sm" placeholder="Kişi ara...">
+            </div>
+            <div id="listContainer">
+                @foreach (var k in ViewBag.Kullanicilar)
+                {
+                    <div class="user-item" id="user-@k.Id" onclick="sohbetAc(@k.Id, '@k.AdSoyad')">
+                        <div class="me-auto">
+                            <div class="fw-bold text-white small">@k.AdSoyad</div>
+                            <div class="text-muted small en-son-mesaj" style="font-size: 11px;">Tıklayarak sohbete başla</div>
+                        </div>
+                        <span class="unread-badge" id="badge-@k.Id">YENİ</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="chat-area">
+            <div id="sohbetHeader" class="p-3 bg-dark text-white border-bottom border-secondary d-none">
+                <span id="aktifKisiAdi" class="fw-bold text-success"></span>
+            </div>
+
+            <div id="sohbetKutusu">
+                <div class="text-center text-muted mt-5">
+                    <h4 class="display-6">💬</h4>
+                    <p>Sohbet etmek için soldan birini seçin.</p>
+                </div>
+            </div>
+
+            <div class="chat-footer d-none" id="mesajGirisAlani">
+                <div class="input-group">
+                    <label class="btn btn-outline-info">
+                        📎 <input type="file" id="dosyaEki" class="d-none">
+                    </label>
+                    <input type="text" id="mesajİcerigi" class="form-control bg-dark text-white border-secondary" placeholder="Mesajınızı buraya yazın..." autocomplete="off">
+                    <button id="btnGonder" class="btn btn-success px-4">Gönder</button>
+                </div>
+                <small id="dosyaAdiEtiketi" class="text-warning mt-1 d-block"></small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+
+<script>
+    const benimId = @ViewBag.BenimId;
+    let seciliKisiId = null;
+
+    function mesajHTML(icerik, saat, dosyaYolu, sinif) {
+        let html = `<div class="${sinif}">${icerik}`;
+        if (dosyaYolu) {
+            let uzanti = dosyaYolu.split('.').pop().toLowerCase();
+            if(['jpg', 'jpeg', 'png', 'gif'].includes(uzanti)) {
+                html += `<br><a href="${dosyaYolu}" target="_blank"><img src="${dosyaYolu}" class="mesaj-dosyasi"></a>`;
+            } else {
+                html += `<br><a href="${dosyaYolu}" target="_blank" class="btn btn-sm btn-light mt-2 fw-bold">📎 Dosyayı İndir</a>`;
+            }
+        }
+        html += `<span class="saat">${saat}</span></div>`;
+        return html;
+    }
+
+    // Sohbeti açan fonksiyon
+    function sohbetAc(id, ad) {
+        seciliKisiId = id;
+        $('.user-item').removeClass('active');
+        $(`#user-${id}`).addClass('active');
+        $(`#badge-${id}`).hide(); // Bildirimi temizle
+
+        $('#sohbetHeader, #mesajGirisAlani').removeClass('d-none');
+        $('#aktifKisiAdi').text("👤 " + ad);
+        $('#sohbetKutusu').html('<div class="text-center text-info mt-5">Yükleniyor...</div>');
+
+        $.get('/Sohbet/GecmisGetir', { karsiId: id }, function(data) {
+            $('#sohbetKutusu').empty();
+            data.forEach(m => {
+                let sinif = (m.gonderenId == benimId) ? "mesaj-giden" : "mesaj-gelen";
+                $('#sohbetKutusu').append(mesajHTML(m.icerik, m.saat, m.dosyaYolu, sinif));
+            });
+            sohbetiAsagiKaydir();
+        });
+    }
+
+    $(document).ready(function() {
+        // Gönderme işlemi
+        $('#btnGonder').click(function() {
+            let mesaj = $('#mesajİcerigi').val();
+            let dosyaInput = $('#dosyaEki')[0];
+            if(!mesaj && dosyaInput.files.length === 0) return;
+
+            let formData = new FormData();
+            formData.append("aliciId", seciliKisiId);
+            formData.append("icerik", mesaj);
+            if (dosyaInput.files.length > 0) formData.append("dosya", dosyaInput.files[0]);
+
+            $.ajax({
+                url: '/Sohbet/Gonder',
+                type: 'POST',
+                data: formData,
+                processData: false, contentType: false,
+                success: function(res) {
+                    $('#sohbetKutusu').append(mesajHTML(mesaj, res.saat, res.dosyaYolu, "mesaj-giden"));
+                    $('#mesajİcerigi, #dosyaEki').val('');
+                    $('#dosyaAdiEtiketi').text('');
+                    sohbetiAsagiKaydir();
+                }
+            });
+        });
+
+        // Arama yapma
+        $("#kisiAra").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $(".user-item").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    // SIGNALR MANTIĞI: Mesaj Gelince En Üste Taşıma ve Bildirim
+    const bağlantı = new signalR.HubConnectionBuilder().withUrl("/bildirimHub").build();
+
+    bağlantı.on("CanliMesajGeldi", function (gonderenId, icerik, saat, dosyaYolu) {
+        const userItem = $(`#user-${gonderenId}`);
+
+        // 1. O kişiyi listenin en tepesine taşı
+        $('#listContainer').prepend(userItem);
+
+        // 2. En son mesaj önizlemesini güncelle
+        userItem.find('.en-son-mesaj').text(icerik ? icerik.substring(0, 20) + "..." : "📎 Dosya gönderildi");
+
+        if(seciliKisiId == gonderenId) {
+            // Eğer zaten o kişiyle konuşuyorsak mesajı ekrana bas
+            $('#sohbetKutusu').append(mesajHTML(icerik, saat, dosyaYolu, "mesaj-gelen"));
+            sohbetiAsagiKaydir();
+        } else {
+            // Konuşmuyorsak Kırmızı Bildirimi Yak!
+            $(`#badge-${gonderenId}`).fadeIn();
+        }
+    });
+
+    bağlantı.start(); 
+
+    function sohbetiAsagiKaydir() {
+        var kutu = document.getElementById('sohbetKutusu');
+        kutu.scrollTop = kutu.scrollHeight;
+    }
+</script>

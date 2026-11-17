@@ -1,0 +1,83 @@
+﻿@model KurumsalHafizaTakip.Modeller.ArsivViewModel
+@{
+    ViewData["Title"] = "Kurumsal Arşiv";
+    Layout = "~/Gorunumler/MainSablon/_AnaSablon.cshtml";
+}
+
+<div class="container-fluid pt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-2">
+        <h2 class="text-secondary">📁 Kurumsal Hafıza Arşivi</h2>
+        <a asp-action="Index" class="btn btn-outline-info btn-sm">← Aktif Listeye Dön</a>
+    </div>
+
+    <!-- 1. BÖLÜM: ARŞİVLENMİŞ PROJELER -->
+    <div class="mb-5">
+        <h4 class="text-info small fw-bold mb-3"><i class="fa fa-folder-open"></i> ARŞİVLENMİŞ PROJELER</h4>
+        <div class="table-responsive shadow-lg rounded">
+            <table class="table table-dark table-hover mb-0">
+                <thead class="text-secondary small">
+                    <tr>
+                        <th>PROJE ADI</th>
+                        <th>SORUMLU YÖNETİCİ</th>
+                        <th>DURUM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Projeler.Any())
+                    {
+                        <tr><td colspan="3" class="text-center text-muted small">Arşivlenmiş proje bulunamadı.</td></tr>
+                    }
+                    @foreach (var proje in Model.Projeler)
+                    {
+                        <tr class="opacity-75">
+                            <td class="text-white-50 fw-bold">@proje.ProjeAdi</td>
+                            <td>@proje.Yonetici?.AdSoyad</td>
+                            <td>
+                                <span class="badge @(proje.Durum == "Tamamlandı" ? "bg-success" : "bg-danger")">@proje.Durum</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 2. BÖLÜM: ARŞİVLENMİŞ GÖREVLER -->
+    <div>
+        <h4 class="text-warning small fw-bold mb-3"><i class="fa fa-tasks"></i> ARŞİVLENMİŞ GÖREVLER</h4>
+        <div class="table-responsive shadow-lg rounded">
+            <table class="table table-dark table-hover mb-0">
+                <thead class="text-secondary small">
+                    <tr>
+                        <th>GÖREV / PROJE</th>
+                        <th>SORUMLU</th>
+                        <th>DURUM</th>
+                        <th class="text-end">KAYIT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Gorevler.Any())
+                    {
+                        <tr><td colspan="4" class="text-center text-muted small">Arşivlenmiş görev bulunamadı.</td></tr>
+                    }
+                    @foreach (var item in Model.Gorevler)
+                    {
+                        <tr class="opacity-75">
+                            <td>
+                                <div class="text-white-50 fw-bold">@item.Baslik</div>
+                                <small class="text-muted">Proje: @(item.Proje?.ProjeAdi ?? "-")</small>
+                            </td>
+                            <td>@item.Personel?.AdSoyad</td>
+                            <td>
+                                <span class="badge @(item.Durum == "Onaylandı" ? "bg-success" : "bg-danger")">@item.Durum</span>
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Detay" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary px-3">Geçmişi Gör</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>7

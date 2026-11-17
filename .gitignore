@@ -361,3 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# Yerel kod dokumu araci ciktisi
+repomix-output*.xml
+
+# Uygulama calisirken yuklenen dosyalar (test verisi)
+KurumsalHafizaTakip/wwwroot/dosyalar/

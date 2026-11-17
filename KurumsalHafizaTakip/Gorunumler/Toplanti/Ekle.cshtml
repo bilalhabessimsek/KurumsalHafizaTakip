@@ -1,0 +1,47 @@
+﻿@model KurumsalHafizaTakip.VeriTabaniTabs.ToplantiTutanagi
+@{
+    Layout = "~/Gorunumler/MainSablon/_AnaSablon.cshtml";
+    ViewData["Title"] = "Yeni Tutanak Ekle";
+}
+
+<div class="container mt-4">
+    <div class="card bg-dark border-info shadow-lg col-md-8 mx-auto">
+        <div class="card-header bg-info text-dark fw-bold">📝 Yeni Toplantı Tutanağı Ekle</div>
+        <div class="card-body">
+            <!-- Dosya yüklemek için enctype ŞARTTIR -->
+            <form asp-action="Ekle" method="post" enctype="multipart/form-data">
+
+                <div class="mb-3">
+                    <label class="form-label text-white-50 small">Toplantı Konusu</label>
+                    <input asp-for="Konu" class="form-control bg-dark text-white border-secondary" required placeholder="Örn: Haftalık Değerlendirme" />
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-white-50 small">Tarih</label>
+                        <input asp-for="Tarih" type="datetime-local" class="form-control bg-dark text-white border-secondary" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-white-50 small">Katılımcılar</label>
+                        <input asp-for="Katilimcilar" class="form-control bg-dark text-white border-secondary" required placeholder="Ahmet, Ayşe..." />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-white-50 small">Alınan Kararlar</label>
+                    <textarea asp-for="AlinanKararlar" class="form-control bg-dark text-white border-secondary" rows="4" required></textarea>
+                </div>
+
+                <div class="mb-3 border border-secondary p-3 rounded">
+                    <label class="form-label text-warning fw-bold small">📎 İmzalı Belge (PDF/Resim - İsteğe Bağlı)</label>
+                    <input type="file" name="dosya" class="form-control bg-dark text-white border-secondary" accept=".pdf,.png,.jpg,.jpeg" />
+                </div>
+
+                <div class="text-end mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Vazgeç</a>
+                    <button type="submit" class="btn btn-info px-4 fw-bold">Arşive Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
